@@ -70,6 +70,11 @@ public static partial class Coroutines
         StopAll(CoroutineLifeTime.BetweenRecall);
     }
 
+    /// <summary>
+    /// Stop All Coroutines
+    /// </summary>
+    /// <param name="lifeTime">Desired Category to stop</param>
+    /// <exception cref="NotSupportedException"></exception>
     public static void StopAll(CoroutineLifeTime lifeTime = CoroutineLifeTime.Level)
     {
         Queue<Coroutine> queueToClear = lifeTime switch
@@ -86,11 +91,22 @@ public static partial class Coroutines
         }
     }
 
+    /// <summary>
+    /// Stop Coroutine by <see cref="Coroutine"/> instance
+    /// </summary>
+    /// <param name="coroutine"></param>
     public static void Stop(Coroutine coroutine)
     {
         _Runner.StopCoroutine(coroutine);
     }
 
+    /// <summary>
+    /// Start Coroutine with given <see cref="CoroutineLifeTime"/>
+    /// </summary>
+    /// <param name="coroutine">Coroutine to Start</param>
+    /// <param name="lifeTime">Life Time for Coroutine</param>
+    /// <returns><see cref="Coroutine"/> instance to use on <see cref="Stop(Coroutine)"/></returns>
+    /// <exception cref="NotSupportedException"></exception>
     public static Coroutine Start(IEnumerator coroutine, CoroutineLifeTime lifeTime = CoroutineLifeTime.Forever)
     {
         Coroutine coroutineRef;

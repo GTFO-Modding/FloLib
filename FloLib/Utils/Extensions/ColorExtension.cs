@@ -6,18 +6,37 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 namespace FloLib.Utils.Extensions;
+/// <summary>
+/// Extension Methods related to <see cref="Color"/>
+/// </summary>
 public static class ColorExtension
 {
+    /// <summary>
+    /// Convert <see cref="Color"/> into RGB format Hex string (#RRGGBB)
+    /// </summary>
+    /// <param name="input"><see cref="Color"/> to convert</param>
+    /// <returns>Hex string (#RRGGBB)</returns>
     public static string ToHex(this Color input)
     {
         return $"#{ColorUtility.ToHtmlStringRGB(input)}";
     }
 
+    /// <summary>
+    /// Convert <see cref="Color"/> into RGBA format Hex String (#RRGGBBAA)
+    /// </summary>
+    /// <param name="input"><see cref="Color"/> to convert</param>
+    /// <returns>Hex string (#RRGGBBAA)</returns>
     public static string ToHexRGBA(this Color input)
     {
         return $"#{ColorUtility.ToHtmlStringRGBA(input)}";
     }
 
+    /// <summary>
+    /// Get Two <see cref="Color"/> information from given color; Base Color and Multiplier
+    /// </summary>
+    /// <param name="input">Input Color</param>
+    /// <param name="baseColor">Output for Base Color</param>
+    /// <param name="colorMultiplier">Output for Multiplier</param>
     public static void GetColorInfo(this Color input, out Color baseColor, out float colorMultiplier)
     {
         float highest_raw = 0.0f;

@@ -27,7 +27,7 @@ public static partial class Coroutines
 
     public static Coroutine DoLerp(LerpInfo lerpInfo, Action<float> onValueChanged, CoroutineLifeTime lifeTime = CoroutineLifeTime.Forever)
     {
-        return Start(Lerp(lerpInfo, onValueChanged));
+        return Start(Lerp(lerpInfo, onValueChanged), lifeTime);
     }
 
     public static IEnumerator Wait(float delay, Action onDone)
