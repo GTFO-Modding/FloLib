@@ -22,14 +22,6 @@ internal class EntryPoint : BasePlugin
         _Harmony.PatchAll();
 
         Automation.RegisterTypes(GetType());
-
-        int c = 0;
-        while (RNG.Global.Float01 != 1.0f)
-        {
-            c++;
-        }
-
-        Logger.Error($"Hmm {c}");
     }
 
     public override bool Unload()

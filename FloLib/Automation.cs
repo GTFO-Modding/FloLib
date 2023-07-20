@@ -4,6 +4,7 @@ using GTFO.API;
 using Il2CppInterop.Runtime.Injection;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -40,17 +41,45 @@ public static class Automation
         };
     }
 
+    /// <summary>
+    /// Get Types to Register from Caller Assembly
+    /// </summary>
+    /// <exception cref="NullReferenceException">Caller Assembly is unknown</exception>
+    public static void RegisterTypes()
+    {
+        var targetAssem = new StackFrame(1).GetMethod()?.GetType()?.Assembly ?? null;
+        if (targetAssem == null)
+            throw new NullReferenceException("Caller Assembly was null");
+
+        RegisterTypes(targetAssem);
+    }
+
+    /// <summary>
+    /// Get Types to Register from Target type's assembly
+    /// </summary>
+    /// <param name="target">Type from target assembly</param>
+    /// <exception cref="ArgumentNullException">target type is null</exception>
     public static void RegisterTypes(Type target)
     {
         if (target == null)
             throw new ArgumentNullException(nameof(target));
 
         var assem = target.Assembly;
-        if (assem == null)
-            throw new NullReferenceException("Target Type Assembly is null");
+        RegisterTypes(assem);
+    }
 
-        InjectAll(assem);
-        AddAutoInvokes(assem);
+    /// <summary>
+    /// Get Types to Register from Target assembly
+    /// </summary>
+    /// <param name="target">Target assembly</param>
+    /// <exception cref="ArgumentNullException">Target Assembly is null</exception>
+    public static void RegisterTypes(Assembly target)
+    {
+        if (target == null)
+            throw new ArgumentNullException(nameof(target));
+
+        InjectAll(target);
+        AddAutoInvokes(target);
     }
 
     private static void InjectAll(Assembly assem)
