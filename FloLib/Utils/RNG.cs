@@ -56,11 +56,19 @@ public class RNG
     }
 
     /// <summary>
-    /// return random float value 0.0 and 1.0 are both inclusive
+    /// return random float value, 0.0 and 1.0 are both inclusive
     /// </summary>
     public float Float01
     {
         get => _Rand.Next(0, Float01Precision + 1) * Float01Inv;
+    }
+
+    /// <summary>
+    /// return random float value (-1.0 ~ 1.0, Both Inclusive)
+    /// </summary>
+    public float FloatMinusOneToPlusOne
+    {
+        get => _Rand.Next(-Float01Precision, Float01Precision + 1) * Float01Inv;
     }
 
     /// <summary>
@@ -120,6 +128,11 @@ public class RNG
             return true;
 
         return _Rand.Next(0, cases) == 0;
+    }
+
+    public T Choice<T>(params T[] items)
+    {
+        return Choice(items as IEnumerable<T>);
     }
 
     /// <summary>
