@@ -8,7 +8,7 @@ namespace FloLib.Attributes;
 /// <summary>
 /// Attribute to specify class to injected to il2cpp when plugin loaded see also: <see cref="Automation.RegisterTypes(Type)"/>
 /// </summary>
-[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
 public sealed class AutoInjectAttribute : Attribute
 {
     internal Type[] Interfaces = Array.Empty<Type>();
