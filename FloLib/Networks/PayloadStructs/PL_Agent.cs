@@ -12,6 +12,16 @@ public struct PL_Agent
 {
     public ushort AgentID;
 
+    public PL_Agent()
+    {
+        AgentID = 0;
+    }
+
+    public PL_Agent(Agent agent)
+    {
+        AgentID = agent.GlobalID;
+    }
+
     public void Set(Agent agent)
     {
         AgentID = agent.GlobalID;
