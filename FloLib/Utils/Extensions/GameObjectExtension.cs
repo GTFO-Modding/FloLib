@@ -19,7 +19,7 @@ public static class GameObjectExtension
     /// <typeparam name="T">Component Type to find</typeparam>
     /// <param name="obj">GameObject to find</param>
     /// <param name="component">Output result of component: null if none</param>
-    /// <returns><see langword="true"/> if Component exists / <see langword="false"/>false if doesn't exist</returns>
+    /// <returns><see langword="true"/> if Component exists / <see langword="false"/> if doesn't exist</returns>
 
     public static bool TryGetComp<T>(this GameObject obj, out T component)
     {
@@ -32,7 +32,7 @@ public static class GameObjectExtension
     /// </summary>
     /// <typeparam name="T">Component Type to find</typeparam>
     /// <param name="obj">GameObject to find</param>
-    /// <returns><see langword="true"/> if Component exists / <see langword="false"/>false if doesn't exist</returns>
+    /// <returns><see langword="true"/> if Component exists / <see langword="false"/> if doesn't exist</returns>
     public static T GetCompInParentOrChild<T>(this GameObject obj)
     {
         T comp = obj.GetComponentInParent<T>();
@@ -45,5 +45,21 @@ public static class GameObjectExtension
             }
         }
         return comp;
+    }
+
+    /// <summary>
+    /// Get Path String for <see cref="GameObject"/>
+    /// </summary>
+    /// <param name="obj">Object to Get a Path</param>
+    /// <returns>Full Path to the GameObject</returns>
+    public static string GetPath(this GameObject obj)
+    {
+        string path = "/" + obj.name;
+        while (obj.transform.parent != null)
+        {
+            obj = obj.transform.parent.gameObject;
+            path = "/" + obj.name + path;
+        }
+        return path;
     }
 }
