@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace FloLib.Utils.Handlers;
+namespace FloLib.Utils.Comps;
 
 [AutoInject]
 internal sealed class EmptyMB : MonoBehaviour
