@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 namespace FloLib.Utils.Extensions;
+/// <summary>
+/// Extension Methods related to <see cref="LG_Light"/>
+/// </summary>
 public static class LGLightExtension
 {
     /// <summary>

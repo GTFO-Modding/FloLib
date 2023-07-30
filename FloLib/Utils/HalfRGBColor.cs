@@ -42,10 +42,12 @@ public struct HalfRGBColor
     /// <param name="col">Color to Convert</param>
     public static implicit operator HalfRGBColor(Color col)
     {
-        var halfCol = new HalfRGBColor();
-        halfCol.R = (Half)col.r;
-        halfCol.G = (Half)col.g;
-        halfCol.B = (Half)col.b;
+        var halfCol = new HalfRGBColor
+        {
+            R = (Half)col.r,
+            G = (Half)col.g,
+            B = (Half)col.b
+        };
         return halfCol;
     }
 }

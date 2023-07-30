@@ -25,6 +25,9 @@ public class RNG
     private Random _Rand;
     private int _Seed;
 
+    /// <summary>
+    /// Create Instance with Random Seed
+    /// </summary>
     public RNG()
     {
         if (_UniqueIDForRandomSeed == uint.MaxValue)
@@ -40,12 +43,20 @@ public class RNG
         _Rand = new(_Seed);
     }
 
+    /// <summary>
+    /// Create Instance using given Seed
+    /// </summary>
+    /// <param name="seed"></param>
     public RNG(int seed)
     {
         _Seed = seed;
         _Rand = new(seed);
     }
 
+    /// <summary>
+    /// Reset Instance State to Initial
+    /// </summary>
+    /// <param name="newSeed">new seed to apply, null to keep it unchanged</param>
     public virtual void Reset(int? newSeed = null)
     {
         if (newSeed != null)
@@ -130,6 +141,12 @@ public class RNG
         return _Rand.Next(0, cases) == 0;
     }
 
+    /// <summary>
+    /// Randomly Choice single item in sequence
+    /// </summary>
+    /// <typeparam name="T">Type of sequence element</typeparam>
+    /// <param name="items">Sequence of items</param>
+    /// <returns>Return selected item</returns>
     public T Choice<T>(params T[] items)
     {
         return Choice(items as IEnumerable<T>);
