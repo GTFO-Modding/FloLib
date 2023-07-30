@@ -67,7 +67,9 @@ public static partial class Coroutines
         onValueChanged?.Invoke(info.From);
         while (time < info.Duration)
         {
-            onValueChanged?.Invoke(Mathf.Lerp(info.From, info.To, time / info.Duration));
+            var progress = info.Easing.Evaluate(time / info.Duration);
+            var value = Mathf.Lerp(info.From, info.To, progress);
+            onValueChanged?.Invoke(value);
             time += Time.deltaTime;
             yield return null;
         }

@@ -68,15 +68,22 @@ public struct LerpInfo
     public float Duration;
 
     /// <summary>
+    /// Easing Type
+    /// </summary>
+    public EaseFunc.Type Easing;
+
+    /// <summary>
     /// Default Constructor
     /// </summary>
     /// <param name="from">Start Value</param>
     /// <param name="to">End Value</param>
     /// <param name="duration">Duration of Lerping Coroutine</param>
-    public LerpInfo(float from, float to, float duration)
+    /// <param name="ease">Ease Type</param>
+    public LerpInfo(float from, float to, float duration, EaseFunc.Type ease = EaseFunc.Type.Linear)
     {
         From = from;
         To = to;
         Duration = duration;
+        Easing = ease;
     }
 }
