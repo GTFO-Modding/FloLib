@@ -1,4 +1,5 @@
-﻿using FloLib.Attributes;
+﻿using AssetShards;
+using FloLib.Attributes;
 using FloLib.Events;
 using GTFO.API;
 using Il2CppInterop.Runtime.Injection;
@@ -21,6 +22,9 @@ public static class Automation
 
     private readonly static Queue<(MethodInfo method, object[] args)> _InvokeWhenStartGame = new();
     private readonly static Queue<(MethodInfo method, object[] args)> _InvokeWhenStartupAssetLoaded = new();
+    private readonly static Queue<(MethodInfo method, object[] args)> _InvokeWhenEnemyAssetLoaded = new();
+    private readonly static Queue<(MethodInfo method, object[] args)> _InvokeWhenSharedAssetLoaded = new();
+    private readonly static Queue<(MethodInfo method, object[] args)> _InvokeWhenAllAssetsLoaded = new();
 
     static Automation()
     {
@@ -32,9 +36,33 @@ public static class Automation
             }
         };
 
-        AssetAPI.OnStartupAssetsLoaded += () =>
+        AssetEvent.OnStartupAssetLoaded += () =>
         {
-            while(_InvokeWhenStartupAssetLoaded.TryDequeue(out var item))
+            while (_InvokeWhenStartupAssetLoaded.TryDequeue(out var item))
+            {
+                RunMethod(item.method, item.args);
+            }
+        };
+
+        AssetEvent.OnEnemyAssetLoaded += () =>
+        {
+            while (_InvokeWhenEnemyAssetLoaded.TryDequeue(out var item))
+            {
+                RunMethod(item.method, item.args);
+            }
+        };
+
+        AssetEvent.OnSharedAssetLoaded += () =>
+        {
+            while (_InvokeWhenSharedAssetLoaded.TryDequeue(out var item))
+            {
+                RunMethod(item.method, item.args);
+            }
+        };
+
+        AssetEvent.OnAllAssetsLoaded += () =>
+        {
+            while (_InvokeWhenAllAssetsLoaded.TryDequeue(out var item))
             {
                 RunMethod(item.method, item.args);
             }

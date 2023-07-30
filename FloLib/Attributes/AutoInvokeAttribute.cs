@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using AssetShards;
+using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -34,9 +35,38 @@ public sealed class AutoInvokeAttribute : Attribute
     }
 }
 
+/// <summary>
+/// Invoke Timing for <see cref="AutoInvokeAttribute"/>
+/// </summary>
 public enum InvokeWhen
 {
+    /// <summary>
+    /// When Plugin Loaded (Right after <see cref="Automation.RegisterTypes()"/> called)
+    /// </summary>
     PluginLoaded,
+
+    /// <summary>
+    /// When <see cref="StartMainGame.Awake"/> has invoked (when the very first scene has loaded)
+    /// </summary>
     StartGame,
+
+    /// <summary>
+    /// When <see cref="AssetShardManager.OnStartupAssetsLoaded"/> has invoked
+    /// </summary>
     StartupAssetLoaded,
+
+    /// <summary>
+    /// When <see cref="AssetShardManager.OnEnemyAssetsLoaded"/> has invoked
+    /// </summary>
+    EnemyAssetLoaded,
+
+    /// <summary>
+    /// When <see cref="AssetShardManager.OnSharedAsssetLoaded"/> has invoked
+    /// </summary>
+    SharedAssetLoaded,
+
+    /// <summary>
+    /// When all [<see cref="AssetShardManager.OnStartupAssetsLoaded"/>], [<see cref="AssetShardManager.OnEnemyAssetsLoaded"/>] and [<see cref="AssetShardManager.OnSharedAsssetLoaded"/>] has invoked
+    /// </summary>
+    AllAssetsLoaded
 }
