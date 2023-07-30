@@ -52,6 +52,14 @@ public sealed partial class StateReplicator<S> where S : struct
         LevelAPI.OnLevelCleanup += LevelCleanedUp;
     }
 
+    /// <summary>
+    /// This actually does nothing, but in case you need to explicitly setup the replicator
+    /// </summary>
+    public static void Setup()
+    {
+        return;
+    }
+
     private static void ClientSyncRequested(SNet_Player requestedPlayer)
     {
         foreach (var replicator in _Replicators.Values)

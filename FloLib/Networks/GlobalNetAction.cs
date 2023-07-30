@@ -19,8 +19,16 @@ public static class GlobalNetAction<P> where P : struct
     private static string _EventName;
     private static bool _IsSetup = false;
 
+    static GlobalNetAction()
+    {
+        Setup();
+    }
+
     public static void Setup()
     {
+        if (_IsSetup)
+            return;
+
         _EventName = UName.Get(typeof(P), "NA");
         NetworkAPI.RegisterEvent<P>(_EventName, Received);
 

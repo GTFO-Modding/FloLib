@@ -22,8 +22,16 @@ public static class GlobalNetMasterAction<P> where P : struct
 
     private static bool _IsSetup = false;
 
+    static GlobalNetMasterAction()
+    {
+        Setup();
+    }
+
     public static void Setup()
     {
+        if (_IsSetup)
+            return;
+
         _AskEventName = UName.Get(typeof(P), "NMA0");
         _EventName = UName.Get(typeof(P), "NMA1");
         NetworkAPI.RegisterEvent<P>(_AskEventName, ReceivedAsk);
