@@ -31,9 +31,4 @@
 		<Obfuscate>True</Obfuscate>
 		<DefineConstants>RELEASE</DefineConstants>
 	</PropertyGroup>
-
-	<ItemGroup>
-	  <Folder Include="Assets\" />
-	  <Folder Include="Game\EMP\" />
-	</ItemGroup>
 </Project>
