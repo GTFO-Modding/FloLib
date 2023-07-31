@@ -160,6 +160,18 @@ public static class Automation
                 case InvokeWhen.StartupAssetLoaded:
                     _InvokeWhenStartupAssetLoaded.Enqueue((method, args));
                     break;
+
+                case InvokeWhen.EnemyAssetLoaded:
+                    _InvokeWhenEnemyAssetLoaded.Enqueue((method, args));
+                    break;
+
+                case InvokeWhen.SharedAssetLoaded:
+                    _InvokeWhenSharedAssetLoaded.Enqueue((method, args));
+                    break;
+
+                case InvokeWhen.AllAssetsLoaded:
+                    _InvokeWhenAllAssetsLoaded.Enqueue((method, args));
+                    break;
             }
         }
     }
