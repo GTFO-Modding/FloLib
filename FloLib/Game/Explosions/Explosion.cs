@@ -13,7 +13,7 @@ using UnityEngine;
 namespace FloLib.Game.Explosions;
 public sealed class Explosion
 {
-    public static readonly Color FlashColor = new(1, 0.2f, 0, 1);
+    public static readonly Color DefaultFlashColor = new(1, 0.2f, 0, 1);
 
     [AutoInvoke(InvokeWhen.StartupAssetLoaded)]
     internal static void Init()
@@ -47,63 +47,97 @@ public sealed class Explosion
 
         DamageUtil.IncrementSearchID();
         var searchID = DamageUtil.SearchID;
-
         foreach (var target in targets)
         {
-            if (target == null)
-                continue;
+            ProcessExplosion(data, target, searchID);
+        }
+    }
 
-            if (target.gameObject == null)
-                continue;
+    private static void ProcessExplosion(ExplosionDescriptor data, Collider target, uint searchID)
+    {
+        if (target == null)
+            return;
 
-            if (!target.gameObject.TryGetComp<IDamageable>(out var targetDamagable))
-                continue;
+        if (target.gameObject == null)
+            return;
 
-            targetDamagable = targetDamagable.GetBaseDamagable();
-            if (targetDamagable == null)
-                continue;
+        if (!target.gameObject.TryGetComp<IDamageable>(out var targetDamagable))
+            return;
 
-            Vector3 targetPosition;
-            var baseAgent = targetDamagable.GetBaseAgent();
-            if (baseAgent != null)
+        targetDamagable = targetDamagable.GetBaseDamagable();
+        if (targetDamagable == null)
+            return;
+
+        if (targetDamagable.TempSearchID == searchID)
+            return;
+
+        var targetPosition = GetDamagablePosition(targetDamagable);
+        targetDamagable.TempSearchID = searchID;
+
+        var distance = Vector3.Distance(data.Position, targetPosition);
+        if (IsExplosionBlocked(data.Position, targetPosition, target))
+        {
+            return;
+        }
+
+        var newDamage = CalcBaseRangeDamage(data.MaxDamage, distance, data.MaxDamageRange, data.MinDamageRange);
+        var enemyBase = targetDamagable.TryCast<Dam_EnemyDamageBase>();
+        if (enemyBase != null)
+        {
+            newDamage *= (float)data.DamageMultiplierToEnemy;
+        }
+        else
+        {
+            var playerBase = targetDamagable.TryCast<Dam_PlayerDamageBase>();
+            if (playerBase != null)
             {
-                targetPosition = baseAgent.EyePosition;
+                newDamage *= (float)data.DamageMultiplierToPlayer;
             }
-            else
-            {
-                targetPosition = target.transform.position;
-            }
+        }
 
-            if (targetDamagable.TempSearchID == searchID)
-            {
-                continue;
-            }
-            targetDamagable.TempSearchID = searchID;
+        var agent = targetDamagable.GetBaseAgent();
+        if (agent != null && agent.GlobalID == data.Inflictor.AgentID)
+        {
+            newDamage *= (float)data.DamageMultiplierToInflictor;
+        }
 
-            var distance = Vector3.Distance(data.Position, targetPosition);
-            if (Physics.Linecast(data.Position, targetPosition, out RaycastHit hit, LayerManager.MASK_EXPLOSION_BLOCKERS))
-            {
-                if (hit.collider == null)
-                    continue;
-
-                if (hit.collider.gameObject == null)
-                    continue;
-
-                if (hit.collider.gameObject.GetInstanceID() != target.gameObject.GetInstanceID())
-                    continue;
-            }
-
-            var newDamage = CalcRangeDamage(data.MaxDamage, distance, data.MaxDamageRange, data.MinDamageRange);
-            var enemyBase = targetDamagable.TryCast<Dam_EnemyDamageBase>();
-            if (enemyBase != null)
-            {
-                newDamage *= (float)data.DamageMultiplierToEnemy;
-            }
+        if (Mathf.Abs(newDamage) > float.Epsilon)
+        {
             targetDamagable.ExplosionDamage(newDamage, data.Position, Vector3.up * 1000);
         }
     }
 
-    private static float CalcRangeDamage(float damage, float distance, float minRange, float maxRange)
+    private static Vector3 GetDamagablePosition(IDamageable damagable)
+    {
+        var baseAgent = damagable.GetBaseAgent();
+        if (baseAgent != null)
+        {
+            return baseAgent.EyePosition;
+        }
+        else
+        {
+            return damagable.DamageTargetPos;
+        }
+    }
+
+    private static bool IsExplosionBlocked(Vector3 pos1, Vector3 pos2, Collider targetCollider)
+    {
+        if (Physics.Linecast(pos1, pos2, out RaycastHit hit, LayerManager.MASK_EXPLOSION_BLOCKERS))
+        {
+            if (hit.collider == null)
+                return false;
+
+            if (hit.collider.gameObject == null)
+                return false;
+
+            if (hit.collider.gameObject.GetInstanceID() != targetCollider.gameObject.GetInstanceID())
+                return false;
+        }
+
+        return true;
+    }
+
+    private static float CalcBaseRangeDamage(float damage, float distance, float minRange, float maxRange)
     {
         var newDamage = 0.0f;
         if (distance <= minRange)
